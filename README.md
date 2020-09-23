@@ -1,11 +1,23 @@
 # laravel-jsend
 
-[![Latest Stable Version](https://poser.pugx.org/shalvah/laravel-jsend/v/stable)](https://packagist.org/packages/shalvah/laravel-jsend) [![Total Downloads](https://poser.pugx.org/shalvah/laravel-jsend/downloads)](https://packagist.org/packages/shalvah/laravel-jsend)
+[![Latest Stable Version](https://poser.pugx.org/shalvah/laravel-jsend/v/stable)](https://packagist.org/packages/shalvah/laravel-jsend)
+[![Total Downloads](https://poser.pugx.org/shalvah/laravel-jsend/downloads)](https://packagist.org/packages/shalvah/laravel-jsend)
 [![Build Status](https://travis-ci.com/shalvah/laravel-jsend.svg?branch=master)](https://travis-ci.com/shalvah/laravel-jsend)
 
 Simple helpers to generate [JSend-compliant](https://labs.omniti.com/labs/jsend) responses for your Laravel app
 
 The [JSend specification](https://labs.omniti.com/labs/jsend) lays down some rules for how JSON responses from web servers should be formatted. JSend is especially suited for REST-style applications and APIs.
+
+## Installation
+Laravel 7 and above:
+```bash
+composer require shalvah/laravel-jsend
+```
+
+Laravel 5.1 - 6.*:
+```bash
+composer require shalvah/laravel-jsend:^1.0
+```
 
 ## Usage
 In your controller:
@@ -23,6 +35,16 @@ public function create(Request $request)
   } catch (Exception $e) {
       return jsend_error('Unable to create user: '.$e->getMessage());
   }
+}
+```
+
+You can also add the `JsendExceptionFormatter` trait in `App\Exceptions\Handler` to format JSON responses for unhandled exceptions and Laravel validation errors as JSend:
+```php
+class Handler extends ExceptionHandler
+{
+    use Shalvah\LaravelJsend\JsendExceptionFormatter;
+    
+    // ...
 }
 ```
 
@@ -110,12 +132,6 @@ Generates a response:
 return jsend_success($post, 201, ["X-My-Header" => "header value"]);
 return jsend_fail(["location_id" => "Location not found"], 404);
 return jsend_error("Unable to connect to database", 'E0001', [], 503, ["X-My-Header" => "header value"]);
-```
-
-## Installation
-
-```bash
-composer require shalvah/laravel-jsend
 ```
 
 ## License
